@@ -1,0 +1,59 @@
+/* Global styles */
+:root {
+  --navbar-height: 80px;
+  --navbar-height-mobile: 60px;
+}
+
+/* Add padding to main content to prevent navbar overlap */
+main {
+  padding-top: var(--navbar-height);
+}
+
+/* Container styles for all pages */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  margin-top: var(--navbar-height);
+}
+
+/* Common section styles */
+.section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Loading and error states */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #dc3545;
+  font-size: 1.2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    padding-top: var(--navbar-height-mobile);
+  }
+
+  .page-container {
+    padding: 1rem;
+    margin-top: var(--navbar-height-mobile);
+  }
+} 

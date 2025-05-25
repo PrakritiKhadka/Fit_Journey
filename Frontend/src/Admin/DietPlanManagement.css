@@ -1,0 +1,892 @@
+/* Main layout */
+.cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .cards-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* Info Cards */
+  .info-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-container {
+    border-radius: 9999px;
+    padding: 0.75rem;
+    margin-right: 1rem;
+  }
+  
+  .blue {
+    background-color: #dbeafe;
+  }
+  
+  .green {
+    background-color: #dcfce7;
+  }
+  
+  .purple {
+    background-color: #f3e8ff;
+  }
+  
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .blue-icon {
+    color: #2563eb;
+  }
+  
+  .green-icon {
+    color: #16a34a;
+  }
+  
+  .purple-icon {
+    color: #7e22ce;
+  }
+  
+  .card-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .card-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  
+  /* Actions Bar */
+  .actions-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .actions-bar {
+      flex-direction: row;
+    }
+  }
+  
+  .search-container {
+    position: relative;
+    flex-grow: 1;
+    align-items: center ;
+  }
+  
+  .search-icon-wrapper {
+    position: absolute;
+    left: 0;
+    padding-left: 0.75rem;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+  
+  .search-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #9ca3af;
+  }
+  
+  .search-input {
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    width: 100%;
+  }
+  
+  .filter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: white;
+  }
+  
+  .add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 0.5rem;
+  }
+  
+  .add-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .button-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .dropdown-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  /* Table Styles */
+  .table-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .table-scroll {
+    overflow-x: auto;
+  }
+  
+  .diet-table {
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .diet-table th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #6b7280;
+    background-color: #f9fafb;
+    letter-spacing: 0.05em;
+  }
+  
+  .diet-table td {
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .table-row:hover {
+    background-color: #f9fafb;
+  }
+  
+  .plan-name {
+    font-weight: 500;
+    color: #111827;
+  }
+  
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .category-weight-loss {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .category-muscle-gain {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .category-keto {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+  }
+  
+  .category-vegan {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .category-mediterranean {
+    background-color: #cffafe;
+    color: #155e75;
+  }
+  
+  .category-default {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+  
+  .diet-info {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .actions-column {
+    text-align: right;
+  }
+  
+  .actions-cell {
+    text-align: right;
+    white-space: nowrap;
+  }
+  
+  .edit-button {
+    color: #2563eb;
+    margin-right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .edit-button:hover {
+    color: #1e40af;
+  }
+  
+  .delete-button {
+    color: #dc2626;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    color: #b91c1c;
+  }
+  
+  .small-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  /* Pagination */
+  .pagination-container {
+    background-color: white;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .pagination-mobile {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+  }
+  
+  @media (min-width: 640px) {
+    .pagination-mobile {
+      display: none;
+    }
+  }
+  
+  .pagination-desktop {
+    display: none;
+  }
+  
+  @media (min-width: 640px) {
+    .pagination-desktop {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  
+  .pagination-text {
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  
+  .pagination-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    background-color: white;
+  }
+  
+  .pagination-button:hover {
+    background-color: #f9fafb;
+  }
+  
+  .pagination-nav {
+    position: relative;
+    display: inline-flex;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .pagination-arrow-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #6b7280;
+  }
+  
+  .pagination-prev {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+  }
+  
+  .pagination-next {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+  
+  .pagination-arrow {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+  
+  .pagination-page-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(75, 85, 99, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 1.5rem;
+    max-width: 28rem;
+    width: 100%;
+  }
+  
+  .modal-header {
+    display: flex;
+    align-items: center;
+    color: #dc2626;
+    margin-bottom: 1rem;
+  }
+  
+  .alert-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .modal-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  
+  .modal-text {
+    margin-bottom: 1rem;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+  
+  .cancel-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    color: #374151;
+    background-color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #f9fafb;
+  }
+  
+  .confirm-delete-button {
+    padding: 0.5rem 1rem;
+    background-color: #dc2626;
+    color: white;
+    border-radius: 0.5rem;
+    border: none;
+  }
+  
+  .confirm-delete-button:hover {
+    background-color: #b91c1c;
+  }
+
+.diet-plan-management {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Back Button */
+.back-button-container {
+  margin-bottom: 24px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Stats Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-container.blue {
+  background-color: #dbeafe;
+}
+
+.icon-container.green {
+  background-color: #dcfce7;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.blue-icon {
+  color: #2563eb;
+}
+
+.green-icon {
+  color: #16a34a;
+}
+
+.card-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.card-value {
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Actions Bar */
+.actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Table */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.diet-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.diet-table th,
+.diet-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.diet-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.diet-table tr:last-child td {
+  border-bottom: none;
+}
+
+.plan-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.category-weight-loss {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.category-muscle-gain {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.category-keto {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.category-vegan {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.category-mediterranean {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.diet-info {
+  color: #4b5563;
+}
+
+.blog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.blog-link:hover {
+  text-decoration: underline;
+}
+
+/* Action Buttons */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.action-button.view {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.action-button.view:hover {
+  background-color: #bfdbfe;
+}
+
+.action-button.edit {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.action-button.edit:hover {
+  background-color: #fde68a;
+}
+
+.action-button.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.action-button.delete:hover {
+  background-color: #fecaca;
+}
+
+/* Loading and Error States */
+.loading-cell,
+.error-cell,
+.empty-cell {
+  text-align: center;
+  padding: 32px;
+  color: #6b7280;
+}
+
+.error-cell {
+  color: #dc2626;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Form */
+.diet-plan-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #e5e7eb;
+}
+
+.submit-button {
+  padding: 8px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .diet-plan-management {
+    padding: 16px;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container {
+    max-width: none;
+  }
+
+  .diet-table th,
+  .diet-table td {
+    padding: 12px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+  }
+}

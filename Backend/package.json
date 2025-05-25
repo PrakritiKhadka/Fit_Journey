@@ -1,0 +1,38 @@
+{
+  "name": "fitjourney-backend",
+  "version": "1.0.0",
+  "description": "Backend for FitJourney application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@react-oauth/google": "^0.12.1",
+    "axios": "^1.8.3",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^7.2.1",
+    "google-auth-library": "^9.15.1",
+    "jsonwebtoken": "^9.0.0",
+    "jwt-decode": "^4.0.0",
+    "mongodb": "^6.14.2",
+    "mongoose": "^7.0.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "zustand": "^5.0.3",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

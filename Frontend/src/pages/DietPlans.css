@@ -1,0 +1,318 @@
+.diet-plans-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.filters-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+}
+
+.search-icon-wrapper {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.category-filter {
+  position: relative;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-button:hover {
+  border-color: #4299e1;
+}
+
+.filter-icon, .dropdown-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #718096;
+}
+
+.category-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 200px;
+}
+
+.category-option {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-option:hover {
+  background-color: #f7fafc;
+}
+
+.category-option.active {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+}
+
+.subscribed-plan {
+  margin-bottom: 2rem;
+}
+
+.subscribed-plan h2 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.plan-card {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card.featured {
+  border: 2px solid #4299e1;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.plan-header h3 {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+.category-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.category-weight-loss {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+
+.category-muscle-gain {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.category-keto {
+  background-color: #e9d8fd;
+  color: #6b46c1;
+}
+
+.category-vegan {
+  background-color: #9ae6b4;
+  color: #276749;
+}
+
+.category-mediterranean {
+  background-color: #fbd38d;
+  color: #c05621;
+}
+
+.category-default {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.plan-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.detail-item .label {
+  color: #718096;
+}
+
+.detail-item .value {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.blog-link {
+  color: #4299e1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.blog-link:hover {
+  color: #2b6cb0;
+  text-decoration: underline;
+}
+
+.subscribe-button,
+.unsubscribe-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.subscribe-button {
+  background-color: #4299e1;
+  color: white;
+  border: none;
+}
+
+.subscribe-button:hover {
+  background-color: #2b6cb0;
+}
+
+.unsubscribe-button {
+  background-color: #fed7d7;
+  color: #c53030;
+  border: none;
+}
+
+.unsubscribe-button:hover {
+  background-color: #f56565;
+  color: white;
+}
+
+.button-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.loading,
+.error,
+.no-plans {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+.error {
+  color: #e53e3e;
+}
+
+@media (max-width: 768px) {
+  .diet-plans-page {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .filters-section {
+    flex-direction: column;
+  }
+
+  .search-container {
+    min-width: 100%;
+  }
+
+  .category-filter {
+    width: 100%;
+  }
+
+  .filter-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+} 
