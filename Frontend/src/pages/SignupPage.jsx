@@ -1,27 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import useUserStore from '../store/user';
-import '../styles/SignupPage.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import useUserStore from "../store/user";
+import "../styles/SignupPage.css";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    gender: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    name: "",
+    age: "",
+    gender: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "user", // Default to normal user
   });
-  const [signupError, setSignupError] = useState('');
-  
-  const { register, googleSignUp, isLoading, isAuthenticated, error, clearError } = useUserStore();
+  const [signupError, setSignupError] = useState("");
+
+  const {
+    register,
+    googleSignUp,
+    isLoading,
+    isAuthenticated,
+    error,
+    clearError,
+  } = useUserStore();
   const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/FitJourneyDashboard');
+      navigate("/FitJourneyDashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,90 +46,98 @@ const SignupPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const validateForm = () => {
     // Check for required fields
-    if (!formData.name || !formData.age || !formData.gender || !formData.email || !formData.password) {
-      setSignupError('All fields are required');
+    if (
+      !formData.name ||
+      !formData.age ||
+      !formData.gender ||
+      !formData.email ||
+      !formData.password ||
+      !formData.role
+    ) {
+      setSignupError("All fields are required");
       return false;
     }
-    
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setSignupError('Please enter a valid email address');
+      setSignupError("Please enter a valid email address");
       return false;
     }
-    
+
     // Validate age
     const age = parseInt(formData.age, 10);
     if (isNaN(age) || age < 13) {
-      setSignupError('You must be at least 13 years old to register');
+      setSignupError("You must be at least 13 years old to register");
       return false;
     }
-    
+
     // Validate password length
     if (formData.password.trim().length < 8) {
-      setSignupError('Password must be at least 8 characters long');
+      setSignupError("Password must be at least 8 characters long");
       return false;
     }
-    
+
     // Validate password confirmation
     if (formData.password !== formData.confirmPassword) {
-      setSignupError('Passwords do not match');
+      setSignupError("Passwords do not match");
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSignupError('');
-    
+    setSignupError("");
+
     if (!validateForm()) {
       return;
     }
-    
+
     try {
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, ...userData } = formData;
 
       userData.age = parseInt(userData.age, 10);
-      
+
       await register(userData);
     } catch (error) {
-      console.error('Registration error caught in component:', error);
-      setSignupError(error.message || 'Registration failed. Please try again.');
+      console.error("Registration error caught in component:", error);
+      setSignupError(error.message || "Registration failed. Please try again.");
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      await googleSignUp(credentialResponse.credential);
+      // Include the selected role when doing Google signup
+      await googleSignUp(credentialResponse.credential, formData.role);
     } catch (error) {
-      console.error('Google signup component error:', error);
-      setSignupError('Google signup failed. Please try again.');
+      console.error("Google signup component error:", error);
+      setSignupError("Google signup failed. Please try again.");
     }
   };
 
   const handleGoogleError = () => {
-    console.error('Google signup failed');
-    setSignupError('Google signup failed. Please try again.');
+    console.error("Google signup failed");
+    setSignupError("Google signup failed. Please try again.");
   };
 
   return (
     <div className="signup-container">
       <div className="signup-card">
         <h1>Create Account</h1>
-        
+
         {signupError && <div className="error-message">{signupError}</div>}
-        
+
         <div className="social-signup">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
@@ -132,11 +148,11 @@ const SignupPage = () => {
             theme="filled_blue"
           />
         </div>
-        
+
         <div className="divider">
           <span>or</span>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
@@ -150,7 +166,7 @@ const SignupPage = () => {
               placeholder="Enter your full name"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="age">Age</label>
             <input
@@ -164,7 +180,7 @@ const SignupPage = () => {
               placeholder="Must be 13 or older"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="gender">Gender</label>
             <select
@@ -181,7 +197,22 @@ const SignupPage = () => {
               <option value="prefer-not-to-say">Prefer not to say</option>
             </select>
           </div>
-          
+
+          <div className="form-group">
+            <label htmlFor="role">Account Type</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Account Type</option>
+              <option value="user">Normal User</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -194,7 +225,7 @@ const SignupPage = () => {
               placeholder="your.email@example.com"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -208,7 +239,7 @@ const SignupPage = () => {
               placeholder="Minimum 8 characters"
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input
@@ -222,16 +253,12 @@ const SignupPage = () => {
               placeholder="Confirm your password"
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className="signup-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+
+          <button type="submit" className="signup-btn" disabled={isLoading}>
+            {isLoading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
-        
+
         <p className="login-link">
           Already have an account? <a href="/LoginPage">Log in</a>
         </p>

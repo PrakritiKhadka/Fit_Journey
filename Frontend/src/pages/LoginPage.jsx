@@ -7,6 +7,7 @@ import "../styles/LoginPage.css";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user"); // Default to normal user
   const [loginError, setLoginError] = useState("");
 
   const { login, googleAuth, isLoading, isAuthenticated, error, clearError } =
@@ -36,17 +37,16 @@ const LoginPage = () => {
     e.preventDefault();
     setLoginError("");
 
-    if (!email || !password) {
-      setLoginError("Please enter both email and password");
+    if (!email || !password || !role) {
+      setLoginError("Please enter email, password, and select account type");
       return;
     }
 
     try {
-      var response = await login(email, password);
+      var response = await login(email, password, role);
       if (response.token) {
         navigate(from);
       }
-
     } catch (error) {
       console.error("Login error caught in component:", error);
       setLoginError(
@@ -59,7 +59,8 @@ const LoginPage = () => {
     try {
       var credential = credentialResponse.credential;
       console.log("Google login response:", credential);
-      var response = await googleAuth(credential);
+      // Include the selected role when doing Google auth
+      var response = await googleAuth(credential, role);
       console.log("googleAuth response", response);
       navigate(from);
     } catch (error) {
@@ -106,6 +107,20 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="role">Account Type</label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            >
+              <option value="">Select Account Type</option>
+              <option value="user">Normal User</option>
+              <option value="admin">Administrator</option>
+            </select>
           </div>
 
           <div className="password-reset">
