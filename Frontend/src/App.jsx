@@ -24,7 +24,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthCallbackPage from "./pages/AuthCallbackPage.jsx";
 import Progress from "./pages/Progress.jsx";
 import AdminUserManagement from "./Admin/AdminUserManagement.jsx";
-import AdminDashboard from "./Admin/AdminDashboard.jsx";
 import AdminPanel from "./Admin/AdminPanel.jsx";
 import DietPlanManagement from "./Admin/DietPlanManagement.jsx";
 import WorkoutManagement from "./Admin/WorkoutManagement.jsx";
@@ -39,7 +38,6 @@ const FooterHandler = () => {
   const location = useLocation();
   const noFooterPaths = [
     "/AdminPanel",
-    "/AdminDashboard",
     "/WorkoutManagement",
     "/AdminUserManagement",
     "/DietPlanManagement",
@@ -57,7 +55,6 @@ const NavbarHandler = () => {
   const location = useLocation();
   const noNavbarPaths = [
     "/AdminPanel",
-    "/AdminDashboard",
     "/WorkoutManagement",
     "/AdminUserManagement",
     "/DietPlanManagement",
@@ -151,14 +148,7 @@ function App() {
                     </AdminProtectedRoute>
                   }
                 />
-                <Route
-                  path="/AdminDashboard"
-                  element={
-                    <AdminProtectedRoute>
-                      <AdminDashboard />
-                    </AdminProtectedRoute>
-                  }
-                />
+
                 <Route
                   path="/AdminUserManagement"
                   element={

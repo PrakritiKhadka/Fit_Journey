@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 export const getUser = async (req, res) => {
   try {
-    var user = req.user
+    var user = req.user;
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -39,54 +39,61 @@ export const createUser = async (userData) => {
 export const updateUser = async (req, res) => {
   try {
     const { name, email, age, gender } = req.body;
-    
+
     // Build user update object
     const userFields = {};
     if (name) userFields.name = name;
     if (email) userFields.email = email;
-    if (age !== undefined) userFields.age = age === '' ? null : age;
+    if (age !== undefined) userFields.age = age === "" ? null : age;
     if (gender) userFields.gender = gender;
-    
+
     // Check if email is being changed and if it's already taken
     if (email && email !== req.user.email) {
-      const existingUser = await User.findOne({ email, _id: { $ne: req.user._id } });
+      const existingUser = await User.findOne({
+        email,
+        _id: { $ne: req.user._id },
+      });
       if (existingUser) {
-        return res.status(400).json({ message: 'Email already in use' });
+        return res.status(400).json({ message: "Email already in use" });
       }
     }
-    
+
     // Don't allow email change for Google-authenticated users
-    if (req.user.authMethod === 'google' && email && email !== req.user.email) {
-      return res.status(400).json({ 
-        message: 'Email cannot be changed for Google-authenticated accounts' 
+    if (req.user.authMethod === "google" && email && email !== req.user.email) {
+      return res.status(400).json({
+        message: "Email cannot be changed for Google-authenticated accounts",
       });
     }
-    
+
     // Update user in database
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: userFields },
       { new: true, runValidators: true }
-    ).select('-password');
-    
+    ).select("-password");
+
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
-    
+
     res.json(updatedUser);
   } catch (err) {
-    console.error('Error updating user:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error updating user:", err.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // Get all users (admin only)
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, '-password -googleId').sort({ createdAt: -1 });
+    const users = await User.find({}, "-password -googleId").sort({
+      createdAt: -1,
+    });
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching users', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching users", error: error.message });
   }
 };
 
@@ -98,12 +105,12 @@ export const updateUserByAdmin = async (req, res) => {
 
     // Validate input
     if (!name || !age || !gender) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Update only allowed fields
@@ -112,9 +119,11 @@ export const updateUserByAdmin = async (req, res) => {
     user.gender = gender;
 
     await user.save();
-    res.json({ message: 'User updated successfully', user });
+    res.json({ message: "User updated successfully", user });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating user', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating user", error: error.message });
   }
 };
 
@@ -125,32 +134,36 @@ export const deleteUserByAdmin = async (req, res) => {
 
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     await User.findByIdAndDelete(id);
-    res.json({ message: 'User deleted successfully' });
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting user', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting user", error: error.message });
   }
 };
 
 export const updateUserGoal = async (req, res) => {
   try {
-    const { goal } = req.body;
+    const { goal, goalType } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     user.goal = goal;
-    await user.save();  
+    user.goalType = goalType;
+    await user.save();
 
-    res.json({ message: 'User goal updated successfully', user });
+    const updatedUser = await User.findById(req.user._id).select("-password");
+    res.json({ message: "User goal updated successfully", user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating user goal', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating user goal", error: error.message });
   }
 };
-
-      

@@ -206,7 +206,7 @@ const SignupPage = () => {
                 <div className="role-content">
                   <div className="role-icon">👨‍💼</div>
                   <div className="role-text">
-                    <span className="role-title">Coach</span>
+                    <span className="role-title">Admin</span>
                     <span className="role-description">
                       Manage athletes & programs
                     </span>

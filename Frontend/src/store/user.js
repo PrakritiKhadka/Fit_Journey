@@ -212,6 +212,14 @@ const useUserStore = create((set) => ({
       throw error;
     }
   },
+
+  setUser: (user) => set({ user }),
+  setToken: (token) => set({ token }),
+
+  updateUser: (userData) =>
+    set((state) => ({
+      user: { ...state.user, ...userData },
+    })),
 }));
 
 export default useUserStore;

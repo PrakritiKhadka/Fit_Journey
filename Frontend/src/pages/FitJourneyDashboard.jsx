@@ -29,9 +29,18 @@ const FitJourneyDashboard = () => {
     age: "",
     gender: "",
     goal: 0,
+    goalType: "",
   });
-  const [goal, setGoal] = useState(0);
+  const [goal, setGoal] = useState({
+    type: "maintain", // 'lose', 'gain', 'maintain'
+    weeklyTarget: 0.5, // kg per week
+    currentWeight: 0,
+    targetWeight: 0,
+    height: 0,
+    activityLevel: "sedentary",
+  });
   const [showGoalForm, setShowGoalForm] = useState(false);
+  const [calculatedCalories, setCalculatedCalories] = useState(0);
   const [subscribedWorkouts, setSubscribedWorkouts] = useState([]);
   const [adminWorkouts, setAdminWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
@@ -139,7 +148,7 @@ const FitJourneyDashboard = () => {
     setIsLoading(true);
     try {
       // Fetch subscribed diet plan
-      const dietPlanResponse = await fetch("/api/diet-plans/user" , {
+      const dietPlanResponse = await fetch("/api/diet-plans/user", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -207,24 +216,132 @@ const FitJourneyDashboard = () => {
     }
   };
 
+  // Function to calculate BMR (Basal Metabolic Rate) using Mifflin-St Jeor Equation
+  const calculateBMR = (weight, height, age, gender) => {
+    if (!weight || !height || !age || !gender) return 0;
+
+    const w = parseFloat(weight);
+    const h = parseFloat(height);
+    const a = parseFloat(age);
+
+    if (gender === "male") {
+      return 10 * w + 6.25 * h - 5 * a + 5;
+    } else {
+      return 10 * w + 6.25 * h - 5 * a - 161;
+    }
+  };
+
+  // Function to calculate TDEE (Total Daily Energy Expenditure)
+  const calculateTDEE = (bmr, activityLevel) => {
+    const activityMultipliers = {
+      sedentary: 1.2, // Little to no exercise
+      lightly_active: 1.375, // Light exercise 1-3 days/week
+      moderately_active: 1.55, // Moderate exercise 3-5 days/week
+      very_active: 1.725, // Hard exercise 6-7 days/week
+      extremely_active: 1.9, // Very hard exercise, physical job
+    };
+
+    return bmr * (activityMultipliers[activityLevel] || 1.2);
+  };
+
+  // Function to calculate calorie goal based on weight goal
+  const calculateCalorieGoal = () => {
+    const bmr = calculateBMR(
+      goal.currentWeight,
+      goal.height,
+      user.age, // Using existing user age
+      user.gender // Using existing user gender
+    );
+
+    const tdee = calculateTDEE(bmr, goal.activityLevel);
+
+    // 1 kg of fat = approximately 7700 calories
+    const caloriesPerKg = 7700;
+    const dailyCalorieAdjustment = (goal.weeklyTarget * caloriesPerKg) / 7;
+
+    let targetCalories = tdee;
+
+    if (goal.type === "lose") {
+      targetCalories = tdee - dailyCalorieAdjustment;
+    } else if (goal.type === "gain") {
+      targetCalories = tdee + dailyCalorieAdjustment;
+    }
+
+    return Math.round(targetCalories);
+  };
+
+  // Update the goal calculation whenever goal data changes
+  useEffect(() => {
+    if (goal.currentWeight && goal.height && user.age && user.gender) {
+      const calories = calculateCalorieGoal();
+      setCalculatedCalories(calories);
+    }
+  }, [goal, user]);
+
+  // Calculate days to reach target
+  const calculateTimeToGoal = () => {
+    if (!goal.currentWeight || !goal.targetWeight || !goal.weeklyTarget)
+      return null;
+
+    const weightDifference = Math.abs(goal.targetWeight - goal.currentWeight);
+    const weeksToGoal = weightDifference / goal.weeklyTarget;
+    const daysToGoal = Math.round(weeksToGoal * 7);
+
+    return { weeks: Math.round(weeksToGoal), days: daysToGoal };
+  };
+
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
+
+    const calculatedCalories = calculateCalorieGoal();
+
     try {
-      // Implement goal submission logic
+      // Get the token from your user store or wherever you store it
+      const token =
+        localStorage.getItem("token") || useUserStore.getState().token;
+
+      if (!token) {
+        showErrorToast("Please log in again");
+        navigate("/login");
+        return;
+      }
+
       const response = await fetch("/api/users/goal", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`, // Make sure token exists
         },
-        body: JSON.stringify({ goal: goal }),
+        body: JSON.stringify({
+          goal: calculatedCalories,
+          goalType: goal.type,
+        }),
       });
+
       if (!response.ok) {
-        throw new Error("Failed to set goal");
+        if (response.status === 401) {
+          showErrorToast("Session expired. Please log in again.");
+          navigate("/login");
+          return;
+        }
+        throw new Error(`Failed to set goal: ${response.status}`);
       }
+
+      const data = await response.json();
+
+      // Update the user store with the new user data
+      if (data.user) {
+        // Assuming you have a method to update user in your store
+        useUserStore.getState().setUser(data.user);
+      }
+
       setShowGoalForm(false);
       showSuccessToast("Goal set successfully!");
+
+      // Optionally refresh the page or update the UI
+      window.location.reload(); // or update state to reflect changes
     } catch (err) {
+      console.error("Goal submission error:", err);
       showErrorToast("Failed to set goal");
     }
   };
@@ -298,17 +415,24 @@ const FitJourneyDashboard = () => {
   };
 
   const getDayName = () => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const days = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
     return days[new Date().getDay()];
   };
 
   const renderTabContent = () => {
+    if (!user.goal) return null;
     switch (activeTab) {
       case "dashboard":
         return (
           <div className="dashboard-content">
-            
-
             <div className="diet-plan-section">
               <div className="diet-plan-header">
                 <h2>Your Activity Detail</h2>
@@ -338,16 +462,23 @@ const FitJourneyDashboard = () => {
                     <div className="daily-section">
                       <h3>Today's Diet Plan</h3>
                       {subscribedDietPlan ? (
-                        subscribedDietPlan.data.dailyDetails[getDayName()]?.meals?.length > 0 ? (
+                        subscribedDietPlan.data.dailyDetails[getDayName()]
+                          ?.meals?.length > 0 ? (
                           <div className="diet-cards">
-                            {subscribedDietPlan.data.dailyDetails[getDayName()].meals.map((meal, index) => (
+                            {subscribedDietPlan.data.dailyDetails[
+                              getDayName()
+                            ].meals.map((meal, index) => (
                               <div key={index} className="meal-card">
                                 <div className="meal-header">
                                   <span className="meal-name">{meal.name}</span>
                                   <span className="meal-time">{meal.time}</span>
                                 </div>
-                                <p className="meal-description">{meal.description}</p>
-                                <span className="meal-calories">{meal.calories} kcal</span>
+                                <p className="meal-description">
+                                  {meal.description}
+                                </p>
+                                <span className="meal-calories">
+                                  {meal.calories} kcal
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -367,18 +498,23 @@ const FitJourneyDashboard = () => {
                       <h3>Today's Workouts</h3>
                       <div className="workout-cards">
                         {subscribedWorkouts?.data?.length > 0 ? (
-                          subscribedWorkouts.data
-                            .filter(workout => {
-                              if (workout.isRecurring && workout.recurringDays) {
-                                return workout.recurringDays.includes(getDayName());
-                              }
-                              return false;
-                            })
-                            .length > 0 ? (
+                          subscribedWorkouts.data.filter((workout) => {
+                            if (workout.isRecurring && workout.recurringDays) {
+                              return workout.recurringDays.includes(
+                                getDayName()
+                              );
+                            }
+                            return false;
+                          }).length > 0 ? (
                             subscribedWorkouts.data
-                              .filter(workout => {
-                                if (workout.isRecurring && workout.recurringDays) {
-                                  return workout.recurringDays.includes(getDayName());
+                              .filter((workout) => {
+                                if (
+                                  workout.isRecurring &&
+                                  workout.recurringDays
+                                ) {
+                                  return workout.recurringDays.includes(
+                                    getDayName()
+                                  );
                                 }
                                 return false;
                               })
@@ -386,17 +522,22 @@ const FitJourneyDashboard = () => {
                                 <div key={index} className="workout-card">
                                   <div className="workout-header">
                                     <h4>{workout.name}</h4>
-                                    <span className={`intensity-badge ${workout.intensityLevel.toLowerCase()}`}>
+                                    <span
+                                      className={`intensity-badge ${workout.intensityLevel.toLowerCase()}`}
+                                    >
                                       {workout.intensityLevel}
                                     </span>
                                   </div>
                                   <div className="workout-details">
-                                    <span><Clock size={16} /> {workout.duration} min</span>
+                                    <span>
+                                      <Clock size={16} /> {workout.duration} min
+                                    </span>
                                     <span>{workout.workoutType}</span>
                                   </div>
                                   {workout.scheduledTime && (
                                     <div className="workout-time">
-                                      <Clock size={16} /> {workout.scheduledTime}
+                                      <Clock size={16} />{" "}
+                                      {workout.scheduledTime}
                                     </div>
                                   )}
                                 </div>
@@ -416,22 +557,40 @@ const FitJourneyDashboard = () => {
                   </div>
                 ) : (
                   <div className="weekly-content">
-                    {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
+                    {[
+                      "monday",
+                      "tuesday",
+                      "wednesday",
+                      "thursday",
+                      "friday",
+                      "saturday",
+                      "sunday",
+                    ].map((day) => (
                       <div key={day} className="day-section">
                         <h3>{day.charAt(0).toUpperCase() + day.slice(1)}</h3>
-                        
+
                         <div className="daily-section">
                           <h4>Diet Plan</h4>
                           {subscribedDietPlan && (
                             <div className="diet-cards">
-                              {subscribedDietPlan.data.dailyDetails[day]?.meals?.map((meal, index) => (
+                              {subscribedDietPlan.data.dailyDetails[
+                                day
+                              ]?.meals?.map((meal, index) => (
                                 <div key={index} className="meal-card">
                                   <div className="meal-header">
-                                    <span className="meal-name">{meal.name}</span>
-                                    <span className="meal-time">{meal.time}</span>
+                                    <span className="meal-name">
+                                      {meal.name}
+                                    </span>
+                                    <span className="meal-time">
+                                      {meal.time}
+                                    </span>
                                   </div>
-                                  <p className="meal-description">{meal.description}</p>
-                                  <span className="meal-calories">{meal.calories} kcal</span>
+                                  <p className="meal-description">
+                                    {meal.description}
+                                  </p>
+                                  <span className="meal-calories">
+                                    {meal.calories} kcal
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -443,8 +602,11 @@ const FitJourneyDashboard = () => {
                           <div className="workout-cards">
                             {subscribedWorkouts?.data?.length > 0 ? (
                               subscribedWorkouts.data
-                                .filter(workout => {
-                                  if (workout.isRecurring && workout.recurringDays) {
+                                .filter((workout) => {
+                                  if (
+                                    workout.isRecurring &&
+                                    workout.recurringDays
+                                  ) {
                                     return workout.recurringDays.includes(day);
                                   }
                                   return false;
@@ -453,23 +615,31 @@ const FitJourneyDashboard = () => {
                                   <div key={index} className="workout-card">
                                     <div className="workout-header">
                                       <h4>{workout.name}</h4>
-                                      <span className={`intensity-badge ${workout.intensityLevel.toLowerCase()}`}>
+                                      <span
+                                        className={`intensity-badge ${workout.intensityLevel.toLowerCase()}`}
+                                      >
                                         {workout.intensityLevel}
                                       </span>
                                     </div>
                                     <div className="workout-details">
-                                      <span><Clock size={16} /> {workout.duration} min</span>
+                                      <span>
+                                        <Clock size={16} /> {workout.duration}{" "}
+                                        min
+                                      </span>
                                       <span>{workout.workoutType}</span>
                                     </div>
                                     {workout.scheduledTime && (
                                       <div className="workout-time">
-                                        <Clock size={16} /> {workout.scheduledTime}
+                                        <Clock size={16} />{" "}
+                                        {workout.scheduledTime}
                                       </div>
                                     )}
                                   </div>
                                 ))
                             ) : (
-                              <div className="no-workouts">No workouts scheduled for {day}</div>
+                              <div className="no-workouts">
+                                No workouts scheduled for {day}
+                              </div>
                             )}
                           </div>
                         </div>
@@ -480,32 +650,35 @@ const FitJourneyDashboard = () => {
               </div>
 
               <div className="recommended-blogs">
-              <div className="section-header">
+                <div className="section-header">
                   <h2>Recommended Blogs</h2>
-                  <button className="view-all-btn" onClick={() => navigate('/blog')}>
+                  <button
+                    className="view-all-btn"
+                    onClick={() => navigate("/blog")}
+                  >
                     View All
                   </button>
                 </div>
                 {recommendedBlogs.length > 0 ? (
-                    <div className="blogs-grid">
-                      {recommendedBlogs.slice(0, 3).map((blog) => (
-                        <div key={blog._id} className="blog-preview-card">
-                          <div className="blog-preview-image">
-                            <BlogPreview key={blog._id} blog={blog} />
-                          </div>
-                          <div className="blog-preview-content">
-                            {/* <h3>{blog.title}</h3>
-                            <p>{blog.excerpt?.substring(0, 60)}...</p> */}
-                            <button
-                              className="read-more-btn"
-                              onClick={() => navigate(`/blog/${blog._id}`)}
-                            >
-                              Read More
-                            </button>
-                          </div>
+                  <div className="blogs-grid">
+                    {recommendedBlogs.slice(0, 3).map((blog) => (
+                      <div key={blog._id} className="blog-preview-card">
+                        <div className="blog-preview-image">
+                          <BlogPreview key={blog._id} blog={blog} />
                         </div>
-                      ))}
-                    </div>
+                        <div className="blog-preview-content">
+                          {/* <h3>{blog.title}</h3>
+                            <p>{blog.excerpt?.substring(0, 60)}...</p> */}
+                          <button
+                            className="read-more-btn"
+                            onClick={() => navigate(`/blog/${blog._id}`)}
+                          >
+                            Read More
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="compact-message">
                     <p>No recommended blogs available</p>
@@ -548,9 +721,18 @@ const FitJourneyDashboard = () => {
                 <div className="profile-row">
                   <div className="profile-label">Goals</div>
                   <div className="profile-value">
-                    {user.goal || "No goals set"} 
+                    {user.goal || "No goals set"} cal/day (
+                    <strong>
+                      {user.goalType === "lose"
+                        ? "🎯 Lose Weight"
+                        : user.goalType === "gain"
+                        ? "💪 Gain Weight"
+                        : "⚖️ Maintain Weight"}
+                    </strong>
+                    )
                   </div>
                 </div>
+
                 <div className="profile-actions">
                   <button
                     className="btn btn-primary"
@@ -630,21 +812,167 @@ const FitJourneyDashboard = () => {
                   <h3>Set Your Fitness Goals</h3>
                   <form onSubmit={handleGoalSubmit}>
                     <div className="form-group">
-                      <label htmlFor="calorieGoal">
-                        Daily Calorie Burn Goal
-                      </label>
+                      <label htmlFor="goalType">What's your goal?</label>
+                      <select
+                        id="goalType"
+                        value={goal.type}
+                        onChange={(e) =>
+                          setGoal({ ...goal, type: e.target.value })
+                        }
+                        required
+                      >
+                        <option value="maintain">
+                          Maintain Current Weight
+                        </option>
+                        <option value="lose">Lose Weight</option>
+                        <option value="gain">Gain Weight</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="currentWeight">Current Weight (kg)</label>
                       <input
                         type="number"
-                        id="calorieGoal"
-                        value={goal}
+                        id="currentWeight"
+                        value={goal.currentWeight}
                         onChange={(e) =>
-                          setGoal(e.target.value)
+                          setGoal({ ...goal, currentWeight: e.target.value })
                         }
-                        min="100"
-                        max="2000"
+                        min="30"
+                        max="300"
+                        step="0.1"
                         required
                       />
                     </div>
+
+                    <div className="form-group">
+                      <label htmlFor="height">Height (cm)</label>
+                      <input
+                        type="number"
+                        id="height"
+                        value={goal.height}
+                        onChange={(e) =>
+                          setGoal({ ...goal, height: e.target.value })
+                        }
+                        min="100"
+                        max="250"
+                        required
+                      />
+                    </div>
+
+                    {goal.type !== "maintain" && (
+                      <>
+                        <div className="form-group">
+                          <label htmlFor="targetWeight">
+                            Target Weight (kg)
+                          </label>
+                          <input
+                            type="number"
+                            id="targetWeight"
+                            value={goal.targetWeight}
+                            onChange={(e) =>
+                              setGoal({ ...goal, targetWeight: e.target.value })
+                            }
+                            min="30"
+                            max="300"
+                            step="0.1"
+                            required
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="weeklyTarget">
+                            How fast do you want to{" "}
+                            {goal.type === "lose" ? "lose" : "gain"} weight?
+                          </label>
+                          <select
+                            id="weeklyTarget"
+                            value={goal.weeklyTarget}
+                            onChange={(e) =>
+                              setGoal({
+                                ...goal,
+                                weeklyTarget: parseFloat(e.target.value),
+                              })
+                            }
+                            required
+                          >
+                            <option value="0.25">
+                              0.25 kg/week (Slow & Steady)
+                            </option>
+                            <option value="0.5">0.5 kg/week (Moderate)</option>
+                            <option value="0.75">0.75 kg/week (Fast)</option>
+                            <option value="1">1 kg/week (Very Fast)</option>
+                          </select>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="form-group">
+                      <label htmlFor="activityLevel">Activity Level</label>
+                      <select
+                        id="activityLevel"
+                        value={goal.activityLevel}
+                        onChange={(e) =>
+                          setGoal({ ...goal, activityLevel: e.target.value })
+                        }
+                        required
+                      >
+                        <option value="sedentary">
+                          Sedentary (Desk job, little exercise)
+                        </option>
+                        <option value="lightly_active">
+                          Lightly Active (Light exercise 1-3 days/week)
+                        </option>
+                        <option value="moderately_active">
+                          Moderately Active (Moderate exercise 3-5 days/week)
+                        </option>
+                        <option value="very_active">
+                          Very Active (Hard exercise 6-7 days/week)
+                        </option>
+                        <option value="extremely_active">
+                          Extremely Active (Very hard exercise + physical job)
+                        </option>
+                      </select>
+                    </div>
+
+                    {calculatedCalories > 0 && (
+                      <div className="calorie-preview">
+                        <div className="calorie-result">
+                          <h4>
+                            🎯 Your Daily Calorie Goal: {calculatedCalories}{" "}
+                            calories
+                          </h4>
+                          <p>
+                            Based on your profile and goals, you should consume
+                            approximately <strong>{calculatedCalories}</strong>{" "}
+                            calories per day.
+                          </p>
+                          {goal.type !== "maintain" && (
+                            <p>
+                              This will help you{" "}
+                              {goal.type === "lose" ? "lose" : "gain"}{" "}
+                              <strong>{goal.weeklyTarget} kg per week</strong>.
+                            </p>
+                          )}
+                          {(() => {
+                            const timeToGoal = calculateTimeToGoal();
+                            return (
+                              timeToGoal &&
+                              goal.type !== "maintain" && (
+                                <p>
+                                  🗓️{" "}
+                                  <strong>
+                                    Estimated time to reach your goal:{" "}
+                                    {timeToGoal.weeks} weeks
+                                  </strong>
+                                </p>
+                              )
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="form-actions">
                       <button type="submit" className="btn btn-primary">
                         Save Goal
@@ -742,7 +1070,7 @@ const FitJourneyDashboard = () => {
                       <th>Name</th>
                       <th>Type</th>
                       <th>Duration</th>
-                      <th>Intensity</th>  
+                      <th>Intensity</th>
                       <th>Calories Burn</th>
                       <th>Actions</th>
                     </tr>
@@ -811,8 +1139,7 @@ const FitJourneyDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {
-                      subscribedDietPlan &&  ( 
+                    {subscribedDietPlan && (
                       <tr key={subscribedDietPlan.data._id}>
                         <td>{subscribedDietPlan.data.name}</td>
                         <td>{subscribedDietPlan.data.category}</td>
@@ -821,7 +1148,11 @@ const FitJourneyDashboard = () => {
                         <td>
                           <button
                             className="btn-icon"
-                            onClick={() => navigate(`/blog/${subscribedDietPlan.data.blogLink}`)}
+                            onClick={() =>
+                              navigate(
+                                `/blog/${subscribedDietPlan.data.blogLink}`
+                              )
+                            }
                             title="View Blog"
                           >
                             View Blog

@@ -48,6 +48,13 @@ const UserSchema = new Schema({
     type: Number,
     required: false,
   },
+  goalType: {
+    type: String,
+    enum: ["lose", "gain", "maintain"],
+    required: function () {
+      return this.goal != null; // Only required when goal is set
+    },
+  },
 });
 // Index for better query performance on role-based queries
 UserSchema.index({ role: 1 });
