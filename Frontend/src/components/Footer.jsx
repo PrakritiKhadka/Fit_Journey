@@ -1,56 +1,101 @@
-import React from 'react';
-import '../styles/Footer.css';
+import React from "react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Mail,
+  Phone,
+  MapPin,
+  Dumbbell,
+} from "lucide-react";
+import "../styles/Footer.css";
 
 const Footer = () => {
-  const year = new Date().getFullYear();
-  
   return (
     <footer className="footer">
       <div className="footer-container">
-        <div className="footer-section about">
-          <h3>Fit<span>Journey</span></h3>
-          <p>Your personal fitness tracking companion. Track workouts, set goals, and achieve results with our comprehensive fitness platform.</p>
-        </div>
-        
-        <div className="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="/FitJourneyDashboard">Dashboard</a></li>
-            <li><a href="/workouts">Workouts</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/blog">Blogs</a></li>
-          </ul>
-        </div>
-        
-        <div className="footer-section contact">
-          <h3>Contact Us</h3>
-          <p><i className="fas fa-envelope"></i>support@fitjourney.com</p>
-          <p><i className="fas fa-phone"></i>+1 (123) 456-7890</p>
-          <p><i className="fas fa-map-marker-alt"></i>123 Fitness Street, Health City</p>
-          <p><i className="fas fa-clock"></i>Mon-Fri: 9AM-6PM EST</p>
-        </div>
-        
-        <div className="footer-section social">
-          <h3>Connect With Us</h3>
-          <div className="social-icons">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-              <i className="fab fa-youtube"></i>
-            </a>
+        <div className="footer-content">
+          {/* Brand Section */}
+          <div className="footer-section brand-section">
+            <div className="footer-logo">
+              <Dumbbell className="logo-icon" />
+              <span className="logo-text">FitJourney</span>
+            </div>
+            <p className="brand-description">
+              Your complete fitness tracking companion. Track workouts, monitor
+              progress, and achieve your health goals with our intuitive
+              platform.
+            </p>
+            <div className="social-links">
+              <a href="#" aria-label="Facebook">
+                <Facebook />
+              </a>
+              <a href="#" aria-label="Twitter">
+                <Twitter />
+              </a>
+              <a href="#" aria-label="Instagram">
+                <Instagram />
+              </a>
+              <a href="#" aria-label="YouTube">
+                <Youtube />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="footer-section">
+            <h3>Quick Links</h3>
+            <ul className="footer-links">
+              <li>
+                <a href="/workouts">Workouts</a>
+              </li>
+              <li>
+                <a href="/progress">Progress</a>
+              </li>
+              <li>
+                <a href="/nutrition">Nutrition</a>
+              </li>
+              <li>
+                <a href="/community">Community</a>
+              </li>
+              <li>
+                <a href="/about">About Us</a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div className="footer-section contact-section">
+            <h3>Get in Touch</h3>
+            <div className="contact-info">
+              <div className="contact-item">
+                <Mail className="contact-icon" />
+                <span>support@fitjourney.com</span>
+              </div>
+              <div className="contact-item">
+                <Phone className="contact-icon" />
+                <span>+1 (555) 123-4567</span>
+              </div>
+              <div className="contact-item">
+                <MapPin className="contact-icon" />
+                <span>San Francisco, CA</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="footer-bottom">
-        <p>&copy; {year} Fit Journey. All rights reserved. | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
+
+        {/* Bottom Bar */}
+        <div className="footer-bottom">
+          <div className="footer-bottom-content">
+            <p>&copy; 2025 FitJourney. All rights reserved.</p>
+            <div className="footer-legal">
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
+              <a href="/cookies">Cookie Policy</a>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );

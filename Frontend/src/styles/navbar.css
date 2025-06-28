@@ -1,19 +1,18 @@
-/* Navbar.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #1e3a8a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 60px;
+  height: 70px;
 }
 
 .navbar-brand {
@@ -25,13 +24,14 @@
 .navbar-brand a {
   color: #ffffff;
   text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: "Inter", sans-serif;
+  letter-spacing: -0.5px;
 }
 
 .navbar-brand a span {
-  color: #00e676;
+  color: #f97316;
 }
 
 .menu-toggle {
@@ -44,21 +44,23 @@
 
 .hamburger {
   display: block;
-  width: 24px;
-  height: 2px;
+  width: 26px;
+  height: 3px;
   background: #ffffff;
   position: relative;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
 .hamburger::before,
 .hamburger::after {
-  content: '';
+  content: "";
   position: absolute;
-  width: 24px;
-  height: 2px;
+  width: 26px;
+  height: 3px;
   background: #ffffff;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
 .hamburger::before {
@@ -83,20 +85,37 @@
 
 .navbar-menu {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   align-items: center;
 }
 
 .navbar-menu a {
-  color: #e0e0e0;
+  color: #e2e8f0;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
-  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  position: relative;
+}
+
+.navbar-menu a::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #f97316;
+  transition: width 0.3s ease;
 }
 
 .navbar-menu a:hover {
-  color: #00e676;
+  color: #ffffff;
+}
+
+.navbar-menu a:hover::after {
+  width: 100%;
 }
 
 .auth-buttons {
@@ -107,70 +126,83 @@
 
 .login-button,
 .signup-button {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s;
-  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  text-align: center;
+  border: none;
+  cursor: pointer;
 }
 
 .login-button {
-  color: #00e676;
-  border: 1px solid #00e676;
+  color: #f97316;
+  border: 2px solid #f97316;
+  background-color: transparent;
 }
 
 .signup-button {
-  background-color: #00e676;
-  color: #121212;
+  background-color: #f97316;
+  color: #ffffff;
+  border: 2px solid #f97316;
 }
 
 .login-button:hover {
-  background-color: rgba(0, 230, 118, 0.1);
+  background-color: #f97316;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .signup-button:hover {
-  background-color: #00c853;
+  background-color: #ea580c;
+  border-color: #ea580c;
+  transform: translateY(-1px);
 }
 
 .user-greeting {
-  color: #e0e0e0;
+  color: #e2e8f0;
   margin-right: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .logout-button {
-  padding: 0.5rem 1rem;
-  background-color: #dc3545;
+  padding: 0.75rem 1.5rem;
+  background-color: #dc2626;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .logout-button:hover {
-  background-color: #c82333;
+  background-color: #b91c1c;
+  transform: translateY(-1px);
 }
 
-/* Add padding to the main content to prevent navbar overlap */
 main {
-  padding-top: 80px;
-  padding-bottom: 80px; /* Add padding for fixed footer */
-  min-height: calc(100vh - 140px); /* viewport height - (navbar + footer) */
+  padding-top: 90px;
+  padding-bottom: 90px;
+  min-height: calc(100vh - 160px);
   position: relative;
 }
 
-/* Update footer styles */
 footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background-color: #ffffff;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  height: 70px;
+  background-color: #1e3a8a;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
   z-index: 999;
   display: flex;
   justify-content: center;
@@ -178,6 +210,11 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+    height: 60px;
+  }
+
   .menu-toggle {
     display: block;
   }
@@ -187,12 +224,12 @@ footer {
     top: 60px;
     left: 0;
     right: 0;
-    background-color: #ffffff;
-    padding: 1rem;
+    background-color: #1e3a8a;
+    padding: 1.5rem;
     display: none;
     flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     height: auto;
     max-height: calc(100vh - 60px);
     overflow-y: auto;
@@ -208,12 +245,12 @@ footer {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #ffffff;
-    padding: 1rem;
+    background-color: #1e3a8a;
+    padding: 1.5rem;
     display: none;
     flex-direction: column;
     gap: 1rem;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
   }
 
@@ -225,19 +262,25 @@ footer {
   .auth-buttons a,
   .auth-buttons button {
     width: 100%;
-    padding: 0.75rem 0;
+    padding: 1rem 0;
     text-align: center;
+  }
+
+  main {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    min-height: calc(100vh - 140px);
+  }
+
+  footer {
+    height: 60px;
   }
 }
 
-/* Add this to your navbar.css file */
-
-/* Add this to your navbar.css file */
-
 .error-banner {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px 15px;
+  background-color: #fef2f2;
+  color: #991b1b;
+  padding: 12px 20px;
   margin: 0;
   text-align: center;
   position: relative;
@@ -246,29 +289,35 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  border-bottom: 1px solid #fecaca;
 }
 
 .close-error {
   background: none;
   border: none;
-  color: #721c24;
+  color: #991b1b;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   margin-left: 15px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .close-error:hover {
-  color: #500;
+  background-color: #fecaca;
 }
-/* Auth Popup Styles */
+
 .auth-popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(30, 58, 138, 0.8);
   z-index: 1001;
   display: flex;
   justify-content: center;
@@ -276,21 +325,23 @@ footer {
 }
 
 .auth-popup-content {
-  background-color: #1a1a1a;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  max-width: 400px;
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
   width: 90%;
   text-align: center;
-  border: 1px solid #333;
+  border: 1px solid #e2e8f0;
 }
 
 .auth-popup-content p {
-  color: #e0e0e0;
-  font-family: 'Poppins', sans-serif;
+  color: #374151;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 .auth-popup-buttons {
@@ -300,33 +351,38 @@ footer {
 }
 
 .login-redirect-button {
-  padding: 10px 20px;
-  background-color: #00e676;
-  color: #121212;
+  padding: 12px 24px;
+  background-color: #f97316;
+  color: #ffffff;
   border: none;
-  border-radius: 4px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
 .login-redirect-button:hover {
-  background-color: #00c853;
+  background-color: #ea580c;
+  transform: translateY(-1px);
 }
 
 .close-popup-button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: transparent;
-  color: #e0e0e0;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
+  color: #6b7280;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
 .close-popup-button:hover {
-  background-color: rgba(224, 224, 224, 0.1);
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
 }

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   age: { type: Number, required: false, min: 13 },
   gender: {
     type: String,
-    enum: ['male', 'female', 'non-binary', 'prefer-not-to-say'],
+    enum: ["male", "female", "non-binary", "prefer-not-to-say"],
     required: true,
   },
   email: {
@@ -16,23 +16,29 @@ const UserSchema = new Schema({
     unique: true,
     match: /^\S+@\S+\.\S+$/,
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+    required: true,
+  },
   authMethod: {
     type: String,
-    enum: ['local', 'google'],
-    default: 'local'
+    enum: ["local", "google"],
+    default: "local",
   },
   password: {
     type: String,
-    required: function() {
-      return this.authMethod === 'local'; // Only required for local auth
-    }
+    required: function () {
+      return this.authMethod === "local"; // Only required for local auth
+    },
   },
   googleId: {
     type: String,
-    required: function() {
-      return this.authMethod === 'google';
+    required: function () {
+      return this.authMethod === "google";
     },
-    sparse: true
+    sparse: true,
   },
   createdAt: {
     type: Date,
@@ -43,6 +49,23 @@ const UserSchema = new Schema({
     required: false,
   },
 });
+// Index for better query performance on role-based queries
+UserSchema.index({ role: 1 });
+UserSchema.index({ email: 1, role: 1 });
 
-const User = mongoose.model('User', UserSchema);
+// Instance method to check if user is admin
+UserSchema.methods.isAdmin = function () {
+  return this.role === "admin";
+};
+
+// Instance method to check if user is normal user
+UserSchema.methods.isUser = function () {
+  return this.role === "user";
+};
+
+// Static method to find users by role
+UserSchema.statics.findByRole = function (role) {
+  return this.find({ role: role });
+};
+const User = mongoose.model("User", UserSchema);
 export default User;

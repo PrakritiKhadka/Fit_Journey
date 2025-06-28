@@ -50,16 +50,25 @@ const Navbar = () => {
         <div className="navbar-brand">
           <Link to="/">FitJourney</Link>
           <button className="menu-toggle" onClick={toggleMenu}>
-            <span className={`hamburger ${isMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger ${isMenuOpen ? "open" : ""}`}></span>
           </button>
         </div>
-        
-        <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          <Link to="/blog" onClick={() => setIsMenuOpen(false)}>Blog</Link>
+
+        <div className={`navbar-menu ${isMenuOpen ? "active" : ""}`}>
+          <Link to="/" onClick={() => setIsMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/blog" onClick={() => setIsMenuOpen(false)}>
+            Blog
+          </Link>
           {isAuthenticated && (
             <>
-              <Link to="/FitJourneyDashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+              <Link
+                to="/FitJourneyDashboard"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
             </>
           )}
         </div>

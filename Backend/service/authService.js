@@ -9,9 +9,16 @@ configDotenv();
 
 export const signupWithGoogle = async (req, res) => {
   const googleToken = req.header("Authorization")?.replace("Bearer ", "");
+  const { role } = req.body; // Get role from request body
 
   if (!googleToken) {
     return res.status(400).json({ message: "Google token is required" });
+  }
+
+  if (!role || !["user", "admin"].includes(role)) {
+    return res
+      .status(400)
+      .json({ message: "Valid role (user/admin) is required" });
   }
 
   try {
@@ -31,6 +38,7 @@ export const signupWithGoogle = async (req, res) => {
         gender: "prefer-not-to-say",
         authMethod: "google",
         googleId: googleUser.sub,
+        role: role, // Add role to user creation
       });
 
       existingUser = await createUser(user);
@@ -38,7 +46,13 @@ export const signupWithGoogle = async (req, res) => {
 
     const token = generateToken(existingUser.id, existingUser.email);
 
-    return res.json({ message: "Signed Up successfully", token });
+    // Return user data along with token
+    const { password, __v, ...userData } = existingUser.toObject();
+    return res.json({
+      message: "Signed Up successfully",
+      token,
+      user: userData,
+    });
   } catch (err) {
     console.error("Error in Google sign-up:", err);
     return res
@@ -48,7 +62,7 @@ export const signupWithGoogle = async (req, res) => {
 };
 
 export const signUpWithEmail = async (req, res) => {
-  const { name, age, gender, email, password } = req.body;
+  const { name, age, gender, email, password, role } = req.body;
 
   if (!email || !password || !name) {
     return res
@@ -56,29 +70,52 @@ export const signUpWithEmail = async (req, res) => {
       .json({ message: "Email, password, and name are required" });
   }
 
-  if (age < 13) {
+  if (!role || !["user", "admin"].includes(role)) {
+    return res
+      .status(400)
+      .json({ message: "Valid role (user/admin) is required" });
+  }
+
+  if (age && age < 13) {
     return res
       .status(400)
       .json({ message: "You must be at least 13 years old to register." });
   }
 
-  // Check if the email is already taken
-  var existingUser = await getUserByEmail(email);
-  if (!existingUser) {
+  try {
+    // Check if the email is already taken
+    var existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
     const user = new User({
       name: name,
-      gender: gender,
+      gender: gender || "prefer-not-to-say",
       email: email,
       password: password,
       age: age,
       authMethod: "local",
+      role: role, // Add role to user creation
     });
 
     existingUser = await createUser(user);
-  }
 
-  const token = generateToken(existingUser.id, existingUser.email);
-  return res.json({ message: "Signed Up successfully", token });
+    const token = generateToken(existingUser.id, existingUser.email);
+
+    // Return user data along with token
+    const { password: _, __v, ...userData } = existingUser.toObject();
+    return res.json({
+      message: "Signed Up successfully",
+      token,
+      user: userData,
+    });
+  } catch (error) {
+    console.error("Error in email sign-up:", error);
+    return res
+      .status(500)
+      .json({ message: "Registration failed. Please try again." });
+  }
 };
 
 export const login = async (req, res) => {
@@ -95,9 +132,21 @@ export const login = async (req, res) => {
       }
 
       var existingUser = await getUserByEmail(googleUser.email);
+      if (!existingUser) {
+        return res
+          .status(400)
+          .json({ message: "User not found. Please sign up first." });
+      }
+
       const token = generateToken(existingUser.id, existingUser.email);
 
-      return res.json({ message: "Logged in successfully", token });
+      // Return user data along with token
+      const { password, __v, ...userData } = existingUser.toObject();
+      return res.json({
+        message: "Logged in successfully",
+        token,
+        user: userData,
+      });
     } else if (req.body.email && req.body.password) {
       const { email, password } = req.body;
 
@@ -109,21 +158,23 @@ export const login = async (req, res) => {
 
       const salt = process.env.PASSWORD_SALT || "RTxD+XMmfNSHh5$da2At";
 
-      bcrypt.compare(password + salt, existingUser.password, (err, isMatch) => {
-        if (err) {
-          return res.status(401).json({ message: "Login Failed, please provide correct credential or contact us" });
-        }
-      
-        if (!isMatch) {
-          return res
-            .status(401)
-            .json({ message: "Login Failed, provide valid credentials" });
-        }
-        const token = generateToken(existingUser.id, existingUser.email);
+      const isMatch = await bcrypt.compare(
+        password + salt,
+        existingUser.password
+      );
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
 
-        return res.json({ message: "Logged in successfully", token });
+      const token = generateToken(existingUser.id, existingUser.email);
+
+      // Return user data along with token
+      const { password: _, __v, ...userData } = existingUser.toObject();
+      return res.json({
+        message: "Logged in successfully",
+        token,
+        user: userData,
       });
-
     } else {
       return res
         .status(401)

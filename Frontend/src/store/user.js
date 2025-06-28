@@ -28,7 +28,7 @@ const useUserStore = create((set) => ({
         isAuthenticated: true,
         isLoading: false,
         error: null,
-        hasLoadedUser: true
+        hasLoadedUser: true,
       });
       return true;
     } catch (error) {
@@ -38,8 +38,8 @@ const useUserStore = create((set) => ({
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        error: error.message || 'Authentication failed',
-        hasLoadedUser: false
+        error: error.message || "Authentication failed",
+        hasLoadedUser: false,
       });
       return false;
     }
@@ -51,10 +51,11 @@ const useUserStore = create((set) => ({
       set({ isLoading: true, error: null });
 
       const response = await api.post("/api/login", { email, password });
-      
+
       localStorage.setItem("token", response.data.token);
 
       set({
+        user: response.data.user, // Store user data from response
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -65,7 +66,7 @@ const useUserStore = create((set) => ({
       console.error("Login error:", error);
       set({
         isLoading: false,
-        error: error.message || "Login failed",
+        error: error.response?.data?.message || "Login failed",
       });
       throw error;
     }
@@ -82,6 +83,7 @@ const useUserStore = create((set) => ({
       localStorage.setItem("token", response.data.token);
 
       set({
+        user: response.data.user, // Store user data from response
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -91,7 +93,7 @@ const useUserStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.message || "Registration failed",
+        error: error.response?.data?.message || "Registration failed",
       });
       throw error;
     }
@@ -109,6 +111,7 @@ const useUserStore = create((set) => ({
       localStorage.setItem("token", response.data.token);
 
       set({
+        user: response.data.user, // Store user data from response
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -118,23 +121,24 @@ const useUserStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.message || "Google authentication failed",
+        error: error.response?.data?.message || "Google authentication failed",
       });
       throw error;
     }
   },
 
-  googleSignUp: async (tokenId) => {
+  googleSignUp: async (tokenId, role) => {
     try {
       set({ isLoading: true, error: null });
 
       localStorage.setItem("token", tokenId);
-      const response = await api.post("/api/signup/google");
+      const response = await api.post("/api/signup/google", { role }); // Pass role in request body
 
       // Store token and user
       localStorage.setItem("token", response.data.token);
 
       set({
+        user: response.data.user, // Store user data from response
         isAuthenticated: true,
         isLoading: false,
         error: null,
@@ -144,7 +148,7 @@ const useUserStore = create((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error: error.message || "Google authentication failed",
+        error: error.response?.data?.message || "Google authentication failed",
       });
       throw error;
     }
@@ -174,14 +178,14 @@ const useUserStore = create((set) => ({
         isAuthenticated: true,
         isLoading: false,
         error: null,
-        hasLoadedUser: true
+        hasLoadedUser: true,
       });
       return response.data;
     } catch (error) {
       set({
         isLoading: false,
         error: error.response?.data?.message || "Failed to load user data",
-        hasLoadedUser: false
+        hasLoadedUser: false,
       });
       throw error;
     }
@@ -190,15 +194,15 @@ const useUserStore = create((set) => ({
   updateProfile: async (userData) => {
     try {
       set({ isLoading: true, error: null });
-      
+
       const response = await api.put("/api/users/me", userData);
-      
+
       set({
         user: response.data,
         isLoading: false,
         error: null,
       });
-      
+
       return response.data;
     } catch (error) {
       set({
