@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Plus, 
-  Filter, 
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Plus,
+  Filter,
   ChevronDown,
   Edit,
   Trash,
   AlertCircle,
   Utensils,
   ArrowLeft,
-  ExternalLink
-} from 'lucide-react';
-import './DietPlanManagement.css';
-import axios from 'axios';
+  ExternalLink,
+} from "lucide-react";
+import "./DietPlanManagement.css";
+import axios from "axios";
 
 function DietPlanManagement() {
   const [dietPlans, setDietPlans] = useState([]);
   const [stats, setStats] = useState({
     totalDietPlans: 0,
-    subscribedDietPlans: 0
+    subscribedDietPlans: 0,
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [planToDelete, setPlanToDelete] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -28,7 +28,7 @@ function DietPlanManagement() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetchDietPlans();
     fetchStats();
@@ -37,16 +37,16 @@ function DietPlanManagement() {
   const fetchDietPlans = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('/api/diet-plans', {
+      const response = await axios.get("/api/diet-plans", {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       setDietPlans(response.data.data);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch diet plans');
-      console.error('Error fetching diet plans:', err);
+      setError("Failed to fetch diet plans");
+      console.error("Error fetching diet plans:", err);
     } finally {
       setIsLoading(false);
     }
@@ -54,46 +54,51 @@ function DietPlanManagement() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('/api/diet-plans/stats', {
+      const response = await axios.get("/api/diet-plans/stats", {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (response.data.success) {
         setStats(response.data.data);
       }
     } catch (err) {
-      console.error('Error fetching stats:', err);
+      console.error("Error fetching stats:", err);
     }
   };
-  
+
   const handleDeleteClick = (plan) => {
     setPlanToDelete(plan);
     setShowDeleteConfirm(true);
   };
-  
+
   const confirmDelete = async () => {
     if (planToDelete) {
       try {
-        const response = await axios.delete(`/api/diet-plans/${planToDelete._id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        const response = await axios.delete(
+          `/api/diet-plans/${planToDelete._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
-        });
-        
+        );
+
         if (response.data.success) {
-          setDietPlans(dietPlans.filter(plan => plan._id !== planToDelete._id));
+          setDietPlans(
+            dietPlans.filter((plan) => plan._id !== planToDelete._id)
+          );
           setShowDeleteConfirm(false);
           setPlanToDelete(null);
           fetchStats(); // Refresh stats after deletion
         }
       } catch (err) {
-        console.error('Error deleting diet plan:', err);
-        alert('Failed to delete diet plan');
+        console.error("Error deleting diet plan:", err);
+        alert("Failed to delete diet plan");
       }
     }
   };
-  
+
   const cancelDelete = () => {
     setShowDeleteConfirm(false);
     setPlanToDelete(null);
@@ -113,24 +118,31 @@ function DietPlanManagement() {
     // Navigate to diet plan details page
     window.location.href = `/diet-plans/${plan._id}`;
   };
-  
-  const filteredDietPlans = dietPlans.filter(plan => 
-    plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    plan.category.toLowerCase().includes(searchTerm.toLowerCase())
+
+  const filteredDietPlans = dietPlans.filter(
+    (plan) =>
+      plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plan.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   // Map categories to color classes
   const getCategoryColor = (category) => {
-    switch(category) {
-      case 'Weight Loss': return 'category-weight-loss';
-      case 'Muscle Gain': return 'category-muscle-gain';
-      case 'Keto': return 'category-keto';
-      case 'Vegan': return 'category-vegan';
-      case 'Mediterranean': return 'category-mediterranean';
-      default: return 'category-default';
+    switch (category) {
+      case "Weight Loss":
+        return "category-weight-loss";
+      case "Muscle Gain":
+        return "category-muscle-gain";
+      case "Keto":
+        return "category-keto";
+      case "Vegan":
+        return "category-vegan";
+      case "Mediterranean":
+        return "category-mediterranean";
+      default:
+        return "category-default";
     }
   };
-  
+
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -139,13 +151,13 @@ function DietPlanManagement() {
         category: e.target.category.value,
         dailyCalories: parseInt(e.target.dailyCalories.value),
         mealsPerDay: parseInt(e.target.mealsPerDay.value),
-        blogLink: e.target.blogLink.value
+        blogLink: e.target.blogLink.value,
       };
 
-      const response = await axios.post('/api/diet-plans', formData, {
+      const response = await axios.post("/api/diet-plans", formData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (response.data.success) {
@@ -154,8 +166,8 @@ function DietPlanManagement() {
         fetchStats(); // Refresh stats
       }
     } catch (err) {
-      console.error('Error creating diet plan:', err);
-      alert('Failed to create diet plan');
+      console.error("Error creating diet plan:", err);
+      alert("Failed to create diet plan");
     }
   };
 
@@ -168,13 +180,17 @@ function DietPlanManagement() {
         category: e.target.category.value,
         dailyCalories: parseInt(e.target.dailyCalories.value),
         mealsPerDay: parseInt(e.target.mealsPerDay.value),
-        blogLink: e.target.blogLink.value
+        blogLink: e.target.blogLink.value,
       };
-      const response = await axios.put(`/api/diet-plans/${selectedPlan._id}`, formData, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const response = await axios.put(
+        `/api/diet-plans/${selectedPlan._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      });
+      );
 
       if (response.data.success) {
         setShowEditModal(false);
@@ -183,8 +199,8 @@ function DietPlanManagement() {
         fetchStats(); // Refresh stats
       }
     } catch (err) {
-      console.error('Error updating diet plan:', err);
-      alert('Failed to update diet plan');
+      console.error("Error updating diet plan:", err);
+      alert("Failed to update diet plan");
     }
   };
 
@@ -208,7 +224,7 @@ function DietPlanManagement() {
             <p className="card-value">{stats.totalDietPlans || 0}</p>
           </div>
         </div>
-        
+
         <div className="info-card">
           <div className="icon-container green">
             <Utensils className="icon green-icon" />
@@ -219,7 +235,7 @@ function DietPlanManagement() {
           </div>
         </div>
       </div>
-      
+
       {/* Actions Bar */}
       <div className="actions-bar">
         <div className="search-container">
@@ -234,13 +250,13 @@ function DietPlanManagement() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
+
         <button className="add-button" onClick={handleCreateClick}>
           <Plus className="button-icon" />
           <span>Add Diet Plan</span>
         </button>
       </div>
-      
+
       {/* Diet Plan List */}
       <div className="table-container">
         <div className="table-scroll">
@@ -252,22 +268,27 @@ function DietPlanManagement() {
                 <th>Daily Calories</th>
                 <th>Meals Per Day</th>
                 <th>No of times Subscribed</th>
-                <th>Blog Link</th>
                 <th className="actions-column">Actions</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan="7" className="loading-cell">Loading diet plans...</td>
+                  <td colSpan="7" className="loading-cell">
+                    Loading diet plans...
+                  </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan="7" className="error-cell">{error}</td>
+                  <td colSpan="7" className="error-cell">
+                    {error}
+                  </td>
                 </tr>
               ) : filteredDietPlans.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="empty-cell">No diet plans found</td>
+                  <td colSpan="7" className="empty-cell">
+                    No diet plans found
+                  </td>
                 </tr>
               ) : (
                 filteredDietPlans.map((plan) => (
@@ -276,44 +297,28 @@ function DietPlanManagement() {
                       <div className="plan-name">{plan.name}</div>
                     </td>
                     <td>
-                      <div className={`category-badge ${getCategoryColor(plan.category)}`}>
+                      <div
+                        className={`category-badge ${getCategoryColor(
+                          plan.category
+                        )}`}
+                      >
                         {plan.category}
                       </div>
                     </td>
-                    <td className="diet-info">
-                      {plan.dailyCalories} kcal
-                    </td>
-                    <td className="diet-info">
-                      {plan.mealsPerDay}
-                    </td>
+                    <td className="diet-info">{plan.dailyCalories} kcal</td>
+                    <td className="diet-info">{plan.mealsPerDay}</td>
                     <td className="diet-info">
                       {plan.subscribers?.length || 0}
                     </td>
-                    <td>
-                      <a 
-                        href={`/blog/${plan.blogLink}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="blog-link"
-                      >
-                        <ExternalLink size={16} />
-                        View Blog
-                      </a>
-                    </td>
+
                     <td className="actions-cell">
-                      <button 
-                        className="action-button view"
-                        onClick={() => handleViewDetails(plan)}
-                      >
-                        View
-                      </button>
-                      <button 
+                      <button
                         className="action-button edit"
                         onClick={() => handleEditClick(plan)}
                       >
                         <Edit className="small-icon" />
                       </button>
-                      <button 
+                      <button
                         className="action-button delete"
                         onClick={() => handleDeleteClick(plan)}
                       >
@@ -327,7 +332,7 @@ function DietPlanManagement() {
           </table>
         </div>
       </div>
-      
+
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="modal-overlay">
@@ -337,20 +342,15 @@ function DietPlanManagement() {
               <h3 className="modal-title">Confirm Deletion</h3>
             </div>
             <p className="modal-text">
-              Are you sure you want to delete diet plan <span className="font-semibold">{planToDelete?.name}</span>? 
-              This action cannot be undone.
+              Are you sure you want to delete diet plan{" "}
+              <span className="font-semibold">{planToDelete?.name}</span>? This
+              action cannot be undone.
             </p>
             <div className="modal-actions">
-              <button 
-                className="cancel-button"
-                onClick={cancelDelete}
-              >
+              <button className="cancel-button" onClick={cancelDelete}>
                 Cancel
               </button>
-              <button 
-                className="confirm-delete-button"
-                onClick={confirmDelete}
-              >
+              <button className="confirm-delete-button" onClick={confirmDelete}>
                 Delete
               </button>
             </div>
@@ -364,9 +364,9 @@ function DietPlanManagement() {
           <div className="modal">
             <div className="modal-header">
               <h3 className="modal-title">
-                {showCreateModal ? 'Create Diet Plan' : 'Edit Diet Plan'}
+                {showCreateModal ? "Create Diet Plan" : "Edit Diet Plan"}
               </h3>
-              <button 
+              <button
                 className="modal-close"
                 onClick={() => {
                   setShowCreateModal(false);
@@ -378,9 +378,11 @@ function DietPlanManagement() {
               </button>
             </div>
             <div className="modal-body">
-              <form 
+              <form
                 className="diet-plan-form"
-                onSubmit={showCreateModal ? handleCreateSubmit : handleEditSubmit}
+                onSubmit={
+                  showCreateModal ? handleCreateSubmit : handleEditSubmit
+                }
               >
                 <div className="form-group">
                   <label htmlFor="name">Name</label>
@@ -394,7 +396,12 @@ function DietPlanManagement() {
                 </div>
                 <div className="form-group">
                   <label htmlFor="category">Category</label>
-                  <select id="category" name="category" defaultValue={selectedPlan?.category} required>
+                  <select
+                    id="category"
+                    name="category"
+                    defaultValue={selectedPlan?.category}
+                    required
+                  >
                     <option value="">Select Category</option>
                     <option value="Weight Loss">Weight Loss</option>
                     <option value="Muscle Gain">Muscle Gain</option>
@@ -437,7 +444,7 @@ function DietPlanManagement() {
                   />
                 </div>
                 <div className="form-actions">
-                  <button 
+                  <button
                     type="button"
                     className="cancel-button"
                     onClick={() => {
@@ -448,11 +455,8 @@ function DietPlanManagement() {
                   >
                     Cancel
                   </button>
-                  <button 
-                    type="submit"
-                    className="submit-button"
-                  >
-                    {showCreateModal ? 'Create' : 'Save Changes'}
+                  <button type="submit" className="submit-button">
+                    {showCreateModal ? "Create" : "Save Changes"}
                   </button>
                 </div>
               </form>

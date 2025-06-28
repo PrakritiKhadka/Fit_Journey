@@ -23,7 +23,7 @@ const LoginPage = () => {
 
   const navigateByRole = (userRole) => {
     if (userRole === "admin") {
-      navigate("/AdminDashboard");
+      navigate("/AdminPanel");
     } else {
       navigate("/FitJourneyDashboard");
     }

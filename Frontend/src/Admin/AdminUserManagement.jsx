@@ -232,15 +232,13 @@ export default function AdminUserManagement() {
                       <td>{user.age}</td>
                       <td>{user.gender}</td>
                       <td>{user.email}</td>
-                      <td>{user.goal ? `${user.goal / 1000} kcal / month` : "No goals set"}</td>
+                      <td>
+                        {user.goal
+                          ? `${user.goal / 1000} kcal / month`
+                          : "No goals set"}
+                      </td>
                       <td>{formatDate(user.createdAt)}</td>
                       <td className="actions-cell">
-                        <button
-                          onClick={() => handleEdit(user)}
-                          className="edit-btn"
-                        >
-                          <Edit size={18} />
-                        </button>
                         <button
                           onClick={() => handleDelete(user._id)}
                           className="delete-btn"

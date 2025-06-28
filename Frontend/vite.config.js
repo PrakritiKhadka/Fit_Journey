@@ -1,17 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5001',
+      "/api": "http://localhost:5000",
     },
   },
   css: {
     modules: {
-      localsConvention: 'camelCase',
+      localsConvention: "camelCase",
     },
   },
   build: {
@@ -19,10 +19,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'quill-vendor': ['react-quill'],
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "quill-vendor": ["react-quill"],
         },
       },
     },
   },
-})
+});
