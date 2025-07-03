@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import useUserStore from '../store/user';
-import '../styles/Profile.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import useUserStore from "../store/user";
+import "../styles/Profile.css";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, isLoading: isUserLoading, error: userError, updateProfile, loadUser } = useUserStore();
+  const {
+    user,
+    isLoading: isUserLoading,
+    error: userError,
+    updateProfile,
+    loadUser,
+  } = useUserStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    age: '',
-    gender: ''
+    name: "",
+    email: "",
+    age: "",
+    gender: "",
   });
   const [error, setError] = useState(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -25,10 +31,10 @@ const Profile = () => {
   useEffect(() => {
     if (user && !isEditing) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        age: user.age || '',
-        gender: user.gender || 'prefer-not-to-say'
+        name: user.name || "",
+        email: user.email || "",
+        age: user.age || "",
+        gender: user.gender || "prefer-not-to-say",
       });
     }
   }, [user, isEditing]);
@@ -46,9 +52,14 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'age' ? (value === '' ? '' : parseInt(value, 10) || '') : value
+      [name]:
+        name === "age"
+          ? value === ""
+            ? ""
+            : parseInt(value, 10) || ""
+          : value,
     }));
   };
 
@@ -58,16 +69,16 @@ const Profile = () => {
       // Make sure we're passing valid data to updateProfile
       const validFormData = {
         ...formData,
-        age: formData.age === '' ? null : formData.age // Handle empty age field
+        age: formData.age === "" ? null : formData.age, // Handle empty age field
       };
-      
+
       await updateProfile(validFormData);
       setIsEditing(false);
       setError(null);
       setShowSuccessPopup(true);
     } catch (err) {
       console.error("Profile update error:", err);
-      setError(err.response?.data?.message || 'Failed to update profile');
+      setError(err.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -75,10 +86,10 @@ const Profile = () => {
     // Reset form data to current user data
     if (user) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        age: user.age || '',
-        gender: user.gender || 'prefer-not-to-say'
+        name: user.name || "",
+        email: user.email || "",
+        age: user.age || "",
+        gender: user.gender || "prefer-not-to-say",
       });
     }
     setIsEditing(false);
@@ -86,7 +97,7 @@ const Profile = () => {
   };
 
   const handleBackToDashboard = () => {
-    navigate('/FitJourneyDashboard');
+    navigate("/FitJourneyDashboard");
   };
 
   if (isUserLoading) {
@@ -117,7 +128,7 @@ const Profile = () => {
   }
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -129,8 +140,8 @@ const Profile = () => {
           <div className="success-popup-content">
             <span className="success-icon">✓</span>
             <p>Profile updated successfully!</p>
-            <button 
-              onClick={() => setShowSuccessPopup(false)} 
+            <button
+              onClick={() => setShowSuccessPopup(false)}
               className="close-popup-button"
             >
               ✕
@@ -146,8 +157,8 @@ const Profile = () => {
       <div className="profile-header">
         <h1 className="profile-title">User Profile</h1>
         {!isEditing ? (
-          <button 
-            onClick={() => setIsEditing(true)} 
+          <button
+            onClick={() => setIsEditing(true)}
             className="edit-button"
             type="button"
           >
@@ -155,15 +166,15 @@ const Profile = () => {
           </button>
         ) : (
           <div className="action-buttons">
-            <button 
-              onClick={handleSubmit} 
+            <button
+              onClick={handleSubmit}
               className="save-button"
               type="button"
             >
               ✓ Save
             </button>
-            <button 
-              onClick={handleCancel} 
+            <button
+              onClick={handleCancel}
               className="cancel-button"
               type="button"
             >
@@ -179,36 +190,36 @@ const Profile = () => {
             <div className="profile-label">Name</div>
             <div className="profile-value">{user.name}</div>
           </div>
-          
+
           <div className="profile-row">
             <div className="profile-label">Age</div>
-            <div className="profile-value">{user.age || 'Not specified'}</div>
+            <div className="profile-value">{user.age || "Not specified"}</div>
           </div>
-          
+
           <div className="profile-row">
             <div className="profile-label">Gender</div>
             <div className="profile-value">
-              {user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : 'Not specified'}
+              {user.gender
+                ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1)
+                : "Not specified"}
             </div>
           </div>
-          
+
           <div className="profile-row">
             <div className="profile-label">Email</div>
             <div className="profile-value">{user.email}</div>
           </div>
-          
+
           <div className="profile-row">
             <div className="profile-label">Account Type</div>
             <div className="profile-value capitalize">
-              {user.authMethod || 'Standard'}
+              {user.authMethod || "Standard"}
             </div>
           </div>
-          
+
           <div className="profile-row">
             <div className="profile-label">Member Since</div>
-            <div className="profile-value">
-              {formatDate(user.createdAt)}
-            </div>
+            <div className="profile-value">{formatDate(user.createdAt)}</div>
           </div>
         </div>
       ) : (
@@ -274,19 +285,21 @@ const Profile = () => {
               onChange={handleChange}
               className="form-input"
               required
-              disabled={user.authMethod === 'google'}
+              disabled={user.authMethod === "google"}
             />
-            {user.authMethod === 'google' && (
+            {user.authMethod === "google" && (
               <p className="form-note">
                 Email cannot be changed for Google-authenticated accounts
               </p>
             )}
           </div>
-          
+
           {/* Adding a submit button within the form for better accessibility */}
           {isEditing && (
-            <div className="form-actions" style={{ display: 'none' }}>
-              <button type="submit" hidden>Submit</button>
+            <div className="form-actions" style={{ display: "none" }}>
+              <button type="submit" hidden>
+                Submit
+              </button>
             </div>
           )}
         </form>

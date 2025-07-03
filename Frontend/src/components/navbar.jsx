@@ -56,7 +56,7 @@ const Navbar = () => {
 
         <div className={`navbar-menu ${isMenuOpen ? "active" : ""}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            Home
+            About
           </Link>
           <Link to="/blog" onClick={() => setIsMenuOpen(false)}>
             Blog

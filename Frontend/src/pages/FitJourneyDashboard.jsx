@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/FitJourneyDashboard.css";
+import "./FitJourneyDashboard.css";
 import useUserStore from "../store/user";
 import { Eye, Plus, Calendar, Clock, Repeat, Bell, Trash2 } from "lucide-react";
 import WorkoutForm from "./WorkoutForm";
@@ -1134,7 +1134,7 @@ const FitJourneyDashboard = () => {
                       <th>Category</th>
                       <th>Daily Calories</th>
                       <th>Meals Per Day</th>
-                      <th>Blog</th>
+                      {/* <th>Blog</th> */}
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -1145,7 +1145,7 @@ const FitJourneyDashboard = () => {
                         <td>{subscribedDietPlan.data.category}</td>
                         <td>{subscribedDietPlan.data.dailyCalories}</td>
                         <td>{subscribedDietPlan.data.mealsPerDay}</td>
-                        <td>
+                        {/* <td>
                           <button
                             className="btn-icon"
                             onClick={() =>
@@ -1157,7 +1157,7 @@ const FitJourneyDashboard = () => {
                           >
                             View Blog
                           </button>
-                        </td>
+                        </td> */}
                         <td>
                           <div className="table-actions">
                             <button
@@ -1189,7 +1189,7 @@ const FitJourneyDashboard = () => {
                       <th>Category</th>
                       <th>Daily Calories</th>
                       <th>Meals Per Day</th>
-                      <th>Blog</th>
+                      {/* <th>Blog</th> */}
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -1200,7 +1200,7 @@ const FitJourneyDashboard = () => {
                         <td>{d.category}</td>
                         <td>{d.dailyCalories}</td>
                         <td>{d.mealsPerDay}</td>
-                        <td>
+                        {/* <td>
                           <button
                             className="btn-icon"
                             onClick={() => navigate(`/blog/${d.blogLink}`)}
@@ -1208,7 +1208,7 @@ const FitJourneyDashboard = () => {
                           >
                             View Blog
                           </button>
-                        </td>
+                        </td> */}
                         <td>
                           <div className="table-actions">
                             <button
