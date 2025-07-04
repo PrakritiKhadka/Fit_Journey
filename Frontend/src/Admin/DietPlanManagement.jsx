@@ -241,7 +241,7 @@ function DietPlanManagement() {
       <div className="actions-bar">
         <div className="search-container">
           <div className="search-icon-wrapper">
-            <Search className="search-icon" />
+            {/* <Search className="search-icon" /> */}
           </div>
           <input
             type="text"
