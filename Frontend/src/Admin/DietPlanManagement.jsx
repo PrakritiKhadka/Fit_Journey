@@ -211,6 +211,7 @@ function DietPlanManagement() {
           <ArrowLeft className="back-icon" />
           <span>Go Back</span>
         </a>
+        <h1>Diet Plan Management</h1>
       </div>
 
       {/* Stats Cards */}

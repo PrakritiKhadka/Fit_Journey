@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit, Save, Plus, Trash } from 'lucide-react';
-import axios from 'axios';
-import './DietPlanDetail.css';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Edit, Save, Plus, Trash } from "lucide-react";
+import axios from "axios";
+import "./DietPlanDetail.css";
 
 function DietPlanDetail() {
   const { id } = useParams();
@@ -12,13 +12,13 @@ function DietPlanDetail() {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedPlan, setEditedPlan] = useState(null);
-  const [selectedDay, setSelectedDay] = useState('monday');
+  const [selectedDay, setSelectedDay] = useState("monday");
   const [showAddMealModal, setShowAddMealModal] = useState(false);
   const [newMeal, setNewMeal] = useState({
-    name: '',
-    time: '',
-    description: '',
-    calories: ''
+    name: "",
+    time: "",
+    description: "",
+    calories: "",
   });
 
   const fetchDietPlan = async () => {
@@ -26,8 +26,8 @@ function DietPlanDetail() {
       setIsLoading(true);
       const response = await axios.get(`/api/diet-plans/${id}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (response.data.success) {
         setDietPlan(response.data.data);
@@ -35,8 +35,8 @@ function DietPlanDetail() {
       }
       setError(null);
     } catch (err) {
-      setError('Failed to fetch diet plan details');
-      console.error('Error fetching diet plan:', err);
+      setError("Failed to fetch diet plan details");
+      console.error("Error fetching diet plan:", err);
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +44,7 @@ function DietPlanDetail() {
 
   useEffect(() => {
     fetchDietPlan();
-  },[id]);
+  }, [id]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -55,24 +55,24 @@ function DietPlanDetail() {
       console.log(editedPlan);
       const response = await axios.put(`/api/diet-plans/${id}`, editedPlan, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (response.data.success) {
         setDietPlan(response.data.data);
         setIsEditing(false);
       }
     } catch (err) {
-      console.error('Error updating diet plan:', err);
-      alert('Failed to update diet plan');
+      console.error("Error updating diet plan:", err);
+      alert("Failed to update diet plan");
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedPlan(prev => ({
+    setEditedPlan((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -83,27 +83,27 @@ function DietPlanDetail() {
         updatedPlan.dailyDetails[selectedDay] = { meals: [] };
       }
       updatedPlan.dailyDetails[selectedDay].meals.push(newMeal);
-      
+
       const response = await axios.put(`/api/diet-plans/${id}`, updatedPlan, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      
+
       if (response.data.success) {
         setDietPlan(response.data.data);
         setEditedPlan(response.data.data);
         setShowAddMealModal(false);
         setNewMeal({
-          name: '',
-          time: '',
-          description: '',
-          calories: ''
+          name: "",
+          time: "",
+          description: "",
+          calories: "",
         });
       }
     } catch (err) {
-      console.error('Error adding meal:', err);
-      alert('Failed to add meal');
+      console.error("Error adding meal:", err);
+      alert("Failed to add meal");
     }
   };
 
@@ -111,20 +111,20 @@ function DietPlanDetail() {
     try {
       const updatedPlan = { ...editedPlan };
       updatedPlan.dailyDetails[day].meals.splice(mealIndex, 1);
-      
+
       const response = await axios.put(`/api/diet-plans/${id}`, updatedPlan, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      
+
       if (response.data.success) {
         setDietPlan(response.data.data);
         setEditedPlan(response.data.data);
       }
     } catch (err) {
-      console.error('Error deleting meal:', err);
-      alert('Failed to delete meal');
+      console.error("Error deleting meal:", err);
+      alert("Failed to delete meal");
     }
   };
 
@@ -143,7 +143,10 @@ function DietPlanDetail() {
   return (
     <div className="diet-plan-detail">
       <div className="back-button-container">
-        <button onClick={() => navigate('/DietPlanManagement')} className="back-button">
+        <button
+          onClick={() => navigate("/DietPlanManagement")}
+          className="back-button"
+        >
           <ArrowLeft className="back-icon" />
           <span>Back to Diet Plans</span>
         </button>
@@ -238,7 +241,12 @@ function DietPlanDetail() {
                 className="edit-input"
               />
             ) : (
-              <a href={`/blog/${dietPlan.blogLink}`} target="_blank" rel="noopener noreferrer" className="blog-link">
+              <a
+                href={`/blog/${dietPlan.blogLink}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="blog-link"
+              >
                 View Blog for more details
               </a>
             )}
@@ -248,10 +256,18 @@ function DietPlanDetail() {
 
       <div className="daily-meals">
         <div className="days-selector">
-          {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
+          {[
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+          ].map((day) => (
             <button
               key={day}
-              className={`day-button ${selectedDay === day ? 'active' : ''}`}
+              className={`day-button ${selectedDay === day ? "active" : ""}`}
               onClick={() => setSelectedDay(day)}
             >
               {day.charAt(0).toUpperCase() + day.slice(1)}
@@ -261,7 +277,10 @@ function DietPlanDetail() {
 
         <div className="meals-container">
           <div className="meals-header">
-            <h2>Meals for {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}</h2>
+            <h2>
+              Meals for{" "}
+              {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}
+            </h2>
             <button
               className="add-meal-button"
               onClick={() => setShowAddMealModal(true)}
@@ -275,8 +294,8 @@ function DietPlanDetail() {
             {dietPlan.dailyDetails[selectedDay]?.meals?.map((meal, index) => (
               <div key={index} className="meal-card">
                 <div className="meal-header">
-                <span className="meal-name">{meal.name}</span>
-                <span className="meal-time">{meal.time}</span>
+                  <span className="meal-name">{meal.name}</span>
+                  <span className="meal-time">{meal.time}</span>
                 </div>
                 <p className="meal-description">{meal.description}</p>
                 <div className="meal-footer">
@@ -316,7 +335,9 @@ function DietPlanDetail() {
                   type="text"
                   id="mealName"
                   value={newMeal.name}
-                  onChange={(e) => setNewMeal({ ...newMeal, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewMeal({ ...newMeal, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -326,7 +347,9 @@ function DietPlanDetail() {
                   type="time"
                   id="mealTime"
                   value={newMeal.time}
-                  onChange={(e) => setNewMeal({ ...newMeal, time: e.target.value })}
+                  onChange={(e) =>
+                    setNewMeal({ ...newMeal, time: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -335,7 +358,9 @@ function DietPlanDetail() {
                 <textarea
                   id="mealDescription"
                   value={newMeal.description}
-                  onChange={(e) => setNewMeal({ ...newMeal, description: e.target.value })}
+                  onChange={(e) =>
+                    setNewMeal({ ...newMeal, description: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -345,7 +370,9 @@ function DietPlanDetail() {
                   type="number"
                   id="mealCalories"
                   value={newMeal.calories}
-                  onChange={(e) => setNewMeal({ ...newMeal, calories: e.target.value })}
+                  onChange={(e) =>
+                    setNewMeal({ ...newMeal, calories: e.target.value })
+                  }
                   min="0"
                   required
                 />
@@ -357,10 +384,7 @@ function DietPlanDetail() {
                 >
                   Cancel
                 </button>
-                <button
-                  className="submit-button"
-                  onClick={handleAddMeal}
-                >
+                <button className="submit-button" onClick={handleAddMeal}>
                   Add Meal
                 </button>
               </div>
@@ -372,4 +396,4 @@ function DietPlanDetail() {
   );
 }
 
-export default DietPlanDetail; 
+export default DietPlanDetail;

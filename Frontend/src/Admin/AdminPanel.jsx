@@ -22,23 +22,23 @@ function AdminPanel() {
     useUserStore();
 
   return (
-    <div className="app">
+    <div className="admin-dashboard">
       {/* Top Navbar */}
-      <nav className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-brand">
-            <div className="brand-accent"></div>
+      <nav className="admin-navbar">
+        <div className="admin-navbar-content">
+          <div className="admin-navbar-brand">
+            <div className="admin-brand-accent"></div>
             <span>Admin Panel</span>
           </div>
-          <div className="user-info">
-            <div className="user-avatar">
+          <div className="admin-user-info">
+            <div className="admin-user-avatar">
               {(user?.name || "Admin").charAt(0).toUpperCase()}
             </div>
-            <span className="greeting-text">
+            <span className="admin-greeting-text">
               Hello, {user?.name || "Admin"}
             </span>
           </div>
-          <Link to="/" className="logout-btn" onClick={handleLogout}>
+          <Link to="/" className="admin-logout-btn" onClick={handleLogout}>
             <LogOut size={20} />
             <span>Logout</span>
           </Link>
@@ -46,51 +46,51 @@ function AdminPanel() {
       </nav>
 
       {/* Center Squares */}
-      <div className="squares-container">
-        <div className="squares-grid">
-          <Link to="/AdminUserManagement" className="square">
-            <div className="square-content">
-              <div className="square-icon-wrapper">
-                <Users className="square-icon" size={32} />
+      <div className="admin-squares-container">
+        <div className="admin-squares-grid">
+          <Link to="/AdminUserManagement" className="admin-square">
+            <div className="admin-square-content">
+              <div className="admin-square-icon-wrapper">
+                <Users className="admin-square-icon" size={32} />
               </div>
               <h3>User Management</h3>
-              <p className="square-description">
+              <p className="admin-square-description">
                 Manage user accounts and permissions
               </p>
             </div>
           </Link>
 
-          <Link to="/WorkoutManagement" className="square">
-            <div className="square-content">
-              <div className="square-icon-wrapper">
-                <Dumbbell className="square-icon" size={32} />
+          <Link to="/WorkoutManagement" className="admin-square">
+            <div className="admin-square-content">
+              <div className="admin-square-icon-wrapper">
+                <Dumbbell className="admin-square-icon" size={32} />
               </div>
               <h3>Workouts</h3>
-              <p className="square-description">
+              <p className="admin-square-description">
                 Create and manage workout plans
               </p>
             </div>
           </Link>
 
-          <Link to="/DietPlanManagement" className="square">
-            <div className="square-content">
-              <div className="square-icon-wrapper">
-                <Utensils className="square-icon" size={32} />
+          <Link to="/DietPlanManagement" className="admin-square">
+            <div className="admin-square-content">
+              <div className="admin-square-icon-wrapper">
+                <Utensils className="admin-square-icon" size={32} />
               </div>
               <h3>Diet Plans</h3>
-              <p className="square-description">
+              <p className="admin-square-description">
                 Design nutrition and meal plans
               </p>
             </div>
           </Link>
 
-          <Link to="/BlogManagement" className="square">
-            <div className="square-content">
-              <div className="square-icon-wrapper">
-                <FileText className="square-icon" size={32} />
+          <Link to="/BlogManagement" className="admin-square">
+            <div className="admin-square-content">
+              <div className="admin-square-icon-wrapper">
+                <FileText className="admin-square-icon" size={32} />
               </div>
               <h3>Blog Management</h3>
-              <p className="square-description">
+              <p className="admin-square-description">
                 Publish and manage blog content
               </p>
             </div>

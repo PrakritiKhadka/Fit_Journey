@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash, Edit, Check, X, Search, ArrowLeft } from "lucide-react";
+import { Trash, Edit, Check, X, ArrowLeft } from "lucide-react";
 import axios from "axios";
 import "./AdminUserManagement.css";
 import useUserStore from "../store/user";
@@ -111,29 +111,16 @@ export default function AdminUserManagement() {
 
   return (
     <div className="admin-container">
-      <nav className="navbar">
-        <div className="navbar-brand">
-          <div className="back-button-container">
-            <a href="/AdminPanel">Admin Panel</a>
-          </div>
-        </div>
-        <div className="user-info">
-          <span className="greeting-text">Hello, {user?.name || "Admin"}</span>
-        </div>
-      </nav>
-
-      {/* Back Button */}
       <div className="back-button-container">
         <a href="/AdminPanel" className="back-button">
           <ArrowLeft className="back-icon" />
           <span>Go Back</span>
         </a>
+        <h1 className="admin-title">Admin User Management</h1>
       </div>
-      <h1 className="admin-title">Admin User Management</h1>
 
       {/* Search Bar */}
       <div className="search-container">
-        <Search className="search-icon" />
         <input
           type="text"
           placeholder="Search users..."
@@ -160,9 +147,7 @@ export default function AdminUserManagement() {
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan="6" className="no-users">
-                  No users found
-                </td>
+                <td className="no-users">No users found</td>
               </tr>
             ) : (
               filteredUsers.map((user) => (
